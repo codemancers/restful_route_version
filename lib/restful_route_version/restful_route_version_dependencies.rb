@@ -3,7 +3,6 @@ module RestfulRouteVersion
     def self.included(base)
       base.send(:remove_method, :remove_unloadable_constants!)
     end
-    #alias_method :old_remove_unloadable_constants!, :remove_unloadable_constants!
     
     mattr_accessor :dynamically_defined_constants
     @@dynamically_defined_constants = Set.new()
