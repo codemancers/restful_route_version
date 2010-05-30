@@ -34,12 +34,6 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
     should "provide inherit_routes routing method" do
       assert @mapper.respond_to?(:inherit_routes)
     end
-
-    
-
-    should "automatically load classes which has to be loaded dynamically" do
-      
-    end
   end
 
   context "Restful route extension with inherit_routes" do 
@@ -77,4 +71,42 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
       assert_match /\/api\/v12\/tags\/\:id\/edit/, v12_tag_route.to_s
     end
   end
+
+  context "Restful route extension with inherit_routes" do
+    setup do 
+      @route_set = ActionController::Routing::RouteSet.new()
+      @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
+      @route_block = lambda do |map|
+        map.version_namespace :api do |api_routes|
+          api_routes.version_namespace(:v10,:cache_route => true) do |v10_routes|
+            v10_routes.resources :articles
+            v10_routes.resources :notes
+          end
+          
+          api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
+            v11_routes.inherit_routes("api/v10", :except => %w(articles))
+            v11_routes.resources :tags
+            v11_routes.resources :articles, :collection => {:search => :get }
+          end
+
+          api_routes.version_namespace(:v12) do |v12_routes|
+            v12_routes.inherit_routes("api/v11")
+            v12_routes.resources :lessons
+          end
+          
+        end #end of map.version_namespace(:api)
+      end #end of route_block
+    end #end of setup block
+
+    should "automatically load classes which has to be loaded dynamically" do
+      @route_block.call(@mapper)
+      assert defined?(Api::V11::NotesController)
+      t_superclass = Api::V11::NotesController.superclass.to_s
+      assert_equal "Api::V10::NotesController", t_superclass
+
+      assert !defined?(Api::V11::ArticlesController)
+      assert !defined?(Api::V12::ArticlesController)
+    end
+  end #end of context inherit_routes
+  
 end
