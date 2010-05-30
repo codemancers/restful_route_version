@@ -9,7 +9,7 @@ module RestfulRouteVersion
           {:path_prefix => name, :name_prefix => "#{name}_", :namespace => "#{name}/"}.merge(options)
         end
       @cached_namespace_blocks ||= {}
-      ActiveSupport::Dependencies.dynamically_defined_constants << "#{new_options[:path_prefix]}".camelize
+      create_controller_class(new_options[:path_prefix].to_s.camelize,Module.new)
       @cached_namespace_blocks[new_options[:path_prefix]] = block if options[:cache_route]
       with_options(new_options, &block)
     end
@@ -35,7 +35,7 @@ module RestfulRouteVersion
         full_constant_name = old_namespace.camelize + "::" + constant_name
         new_controller_name = "#{current_namespace.camelize}#{constant_name}"
         if create_controller_dynamically?(controllers_to_exclude, full_constant_name, new_controller_name)
-          create_controller_class(new_controller_name, full_constant_name)
+          create_controller_class(new_controller_name,Class.new(full_constant_name.constantize))
         end
       end
     end
@@ -47,7 +47,7 @@ module RestfulRouteVersion
     end
 
 
-    def create_controller_class(full_constant_name, base_class_name)
+    def create_controller_class(full_constant_name, klass_constant)
       names = full_constant_name.split('::')
       names.shift if names.empty? || names.first.empty?
       constant = Object
@@ -55,7 +55,7 @@ module RestfulRouteVersion
         if constant.const_defined?(name)
           constant = constant.const_get(name)
         else
-          constant = constant.const_set(name, Class.new(base_class_name.constantize))
+          constant = constant.const_set(name, klass_constant)
           ActiveSupport::Dependencies.dynamically_defined_constants << full_constant_name
         end
       end

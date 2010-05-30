@@ -104,12 +104,43 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
       t_superclass = Api::V11::NotesController.superclass.to_s
       assert_equal "Api::V10::NotesController", t_superclass
 
-      assert !defined?(Api::V11::ArticlesController)
-      assert !defined?(Api::V12::ArticlesController)
 
       assert defined?(Api::V12::NotesController)
       assert_equal "Api::V11::NotesController", Api::V12::NotesController.superclass.to_s
     end
   end #end of context inherit_routes
+
+  context "Inheri controller with except" do 
+    setup do 
+      @route_set = ActionController::Routing::RouteSet.new()
+      @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
+      @route_block = lambda do |map|
+        map.version_namespace :api do |api_routes|
+          api_routes.version_namespace(:v10,:cache_route => true) do |v10_routes|
+            v10_routes.resources :articles
+            v10_routes.resources :notes
+          end
+          
+          api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
+            v11_routes.inherit_routes("api/v10", :except => %w(articles))
+            v11_routes.resources :tags
+            v11_routes.resources :articles, :collection => {:search => :get }
+          end
+
+          api_routes.version_namespace(:v12) do |v12_routes|
+            v12_routes.inherit_routes("api/v11")
+            v12_routes.resources :lessons
+          end
+          
+        end #end of map.version_namespace(:api)
+      end #end of route_block
+    end #end of setup block
+
+    should "not create controllers in only specified namespace" do
+      @route_block.call(@mapper)
+      assert defined?(Api::V11::ArticlesController)
+      assert defined?(Api::V12::ArticlesController)
+    end
+  end
   
 end
