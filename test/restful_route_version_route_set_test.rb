@@ -106,6 +106,9 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
 
       assert !defined?(Api::V11::ArticlesController)
       assert !defined?(Api::V12::ArticlesController)
+
+      assert defined?(Api::V12::NotesController)
+      assert_equal "Api::V11::NotesController", Api::V12::NotesController.superclass.to_s
     end
   end #end of context inherit_routes
   
