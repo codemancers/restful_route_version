@@ -72,6 +72,9 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
     
     should "create derived routes when using inherit_routes" do
       @route_block.call(@mapper)
+      v12_tag_route = @route_set.named_routes.routes[:edit_api_v12_tag]
+      assert !v12_tag_route.blank?
+      assert_match /\/api\/v12\/tags\/\:id\/edit/, v12_tag_route.to_s
     end
   end
 end
