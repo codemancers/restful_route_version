@@ -7,6 +7,7 @@ module RestfulRouteVersion
     mattr_accessor :dynamically_defined_constants
     @@dynamically_defined_constants = Set.new()
 
+    # FIXME: make this more graceful without removing existing method
     def remove_unloadable_constants!
       autoloaded_constants.each { |const|
         remove_constant const unless dynamically_defined_constants.include?(const)
