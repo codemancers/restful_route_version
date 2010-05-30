@@ -1,5 +1,6 @@
 module RestfulRouteVersion
   module RestfulRouteVersionRouteSet
+    attr_accessor :cached_namespace_blocks
     def version_namespace(name, options = {}, &block)
       new_options =
         if options[:namespace]
