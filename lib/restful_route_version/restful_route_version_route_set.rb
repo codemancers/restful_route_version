@@ -48,8 +48,8 @@ module RestfulRouteVersion
 
 
     def create_controller_class(full_constant_name, klass_constant)
-
       names = full_constant_name.split('::')
+      ActiveSupport::Dependencies.dynamically_defined_constants << full_constant_name
       names.shift if names.empty? || names.first.empty?
       constant = Object
       names.each do |name|
@@ -57,7 +57,6 @@ module RestfulRouteVersion
           constant = constant.const_get(name)
         else
           constant = constant.const_set(name, klass_constant)
-          ActiveSupport::Dependencies.dynamically_defined_constants << full_constant_name
         end
       end
     end
