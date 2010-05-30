@@ -6,7 +6,7 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
       @route_set = ActionController::Routing::RouteSet.new()
       @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
     end
-    
+  
     should "provide version_namespace routing method" do
       assert @mapper.respond_to?(:version_namespace)
     end
@@ -47,7 +47,7 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
             v10_routes.resources :comments
             v10_routes.resources :notes
           end
-          
+  
           api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
             v11_routes.inherit_routes("api/v10", :except => %w(articles))
             v11_routes.resources :tags
@@ -58,12 +58,12 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
             v12_routes.inherit_routes("api/v11")
             v12_routes.resources :lessons
           end
-          
+  
         end #end of map.version_namespace(:api)
       end #end of route_block
-      
+  
     end #end of setup block
-    
+  
     should "create derived routes when using inherit_routes" do
       @route_block.call(@mapper)
       v12_tag_route = @route_set.named_routes.routes[:edit_api_v12_tag]
@@ -82,7 +82,7 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
             v10_routes.resources :articles
             v10_routes.resources :notes
           end
-          
+  
           api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
             v11_routes.inherit_routes("api/v10", :except => %w(articles))
             v11_routes.resources :tags
@@ -93,7 +93,7 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
             v12_routes.inherit_routes("api/v11")
             v12_routes.resources :lessons
           end
-          
+  
         end #end of map.version_namespace(:api)
       end #end of route_block
     end #end of setup block
@@ -120,9 +120,45 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
             v10_routes.resources :articles
             v10_routes.resources :notes
           end
-          
+  
           api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
             v11_routes.inherit_routes("api/v10", :except => %w(articles))
+            v11_routes.resources :tags
+            v11_routes.resources :articles, :collection => {:search => :get }
+          end
+
+          api_routes.version_namespace(:v12) do |v12_routes|
+            v12_routes.inherit_routes("api/v11")
+            v12_routes.resources :lessons
+          end
+  
+        end #end of map.version_namespace(:api)
+      end #end of route_block
+    end #end of setup block
+
+    should "not create controllers in only specified namespace" do
+      @route_block.call(@mapper)
+      assert defined?(Api::V11::ArticlesController)
+      assert defined?(Api::V12::ArticlesController)
+    end
+  end
+
+  context "Inherit controller with except for non-existant" do 
+    setup do
+      ActiveSupport::Dependencies.remove_constant("Api::V11::QuestionsController")
+      ActiveSupport::Dependencies.remove_constant("Api::V12::QuestionsController")
+      @route_set = ActionController::Routing::RouteSet.new()
+      @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
+      @route_block = lambda do |map|
+        map.version_namespace :api do |api_routes|
+          api_routes.version_namespace(:v10,:cache_route => true) do |v10_routes|
+            v10_routes.resources :articles
+            v10_routes.resources :notes
+            v10_routes.resources :questions
+          end
+          
+          api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
+            v11_routes.inherit_routes("api/v10", :except => %w(articles questions))
             v11_routes.resources :tags
             v11_routes.resources :articles, :collection => {:search => :get }
           end
@@ -138,8 +174,9 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
 
     should "not create controllers in only specified namespace" do
       @route_block.call(@mapper)
-      assert defined?(Api::V11::ArticlesController)
-      assert defined?(Api::V12::ArticlesController)
+      assert defined?(Api::V10::QuestionsController)
+      assert !defined?(Api::V11::QuestionsController)
+      assert !defined?(Api::V12::QuestionsController)
     end
   end
   

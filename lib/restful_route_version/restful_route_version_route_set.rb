@@ -48,6 +48,7 @@ module RestfulRouteVersion
 
 
     def create_controller_class(full_constant_name, klass_constant)
+
       names = full_constant_name.split('::')
       names.shift if names.empty? || names.first.empty?
       constant = Object
