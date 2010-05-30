@@ -1,5 +1,3 @@
-
-==========
 Restful Route Version plugin
 
 * * * * *
@@ -16,8 +14,6 @@ Features
         v10_routes.resources :notes
       end
       
-      # Problem with this approach
-      # 2. Files still has to be present unless, I find a way to specify dependency fallbacks
       api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
         v11_routes.inherit_routes("api/v10", :except => %w(articles))
         v11_routes.resources :tags
@@ -37,7 +33,7 @@ Features
 
 Known Issues
 ----------
-1. If `Api::V10::NotesController` uses view files such as `index.xml.erb`, the derived controller `Api::V11::NotesController`
-   will try to find view files under `app/views/api/v11/notes` rather than `app/views/api/v10/notes`.
+1. If `Api::V10::NotesController` uses view files such as `index.xml.erb`, the derived controller `Api::V11::NotesController` will try to find view files under `app/views/api/v11/notes` rather than `app/views/api/v10/notes`.
+
    
 
