@@ -2,11 +2,11 @@ module RestfulRouteVersion
   module RestfulRouteVersionRouteSet
     def version_namespace(name, options = {}, &block)
       new_options =
-              if options[:namespace]
-                {:path_prefix => "#{options.delete(:path_prefix)}/#{name}", :name_prefix => "#{options.delete(:name_prefix)}#{name}_", :namespace => "#{options.delete(:namespace)}#{name}/"}.merge(options)
-              else
-                {:path_prefix => name, :name_prefix => "#{name}_", :namespace => "#{name}/"}.merge(options)
-              end
+        if options[:namespace]
+          {:path_prefix => "#{options.delete(:path_prefix)}/#{name}", :name_prefix => "#{options.delete(:name_prefix)}#{name}_", :namespace => "#{options.delete(:namespace)}#{name}/"}.merge(options)
+        else
+          {:path_prefix => name, :name_prefix => "#{name}_", :namespace => "#{name}/"}.merge(options)
+        end
       @cached_namespace_blocks ||= {}
       ActiveSupport::Dependencies.dynamically_defined_constants << "#{new_options[:path_prefix]}".camelize
       @cached_namespace_blocks[new_options[:path_prefix]] = block if options[:cache_route]
@@ -41,8 +41,8 @@ module RestfulRouteVersion
 
     def create_controller_dynamically?(controllers_to_exclude, old_controller_name, new_controller_name)
       !controllers_to_exclude.include?(old_controller_name) &&
-              old_controller_name =~ /Controller$/ &&
-              !File.exists?("#{Rails.root}/app/controllers/#{new_controller_name.underscore}.rb")
+        old_controller_name =~ /Controller$/ &&
+        !File.exists?("#{Rails.root}/app/controllers/#{new_controller_name.underscore}.rb")
     end
 
 
