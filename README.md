@@ -1,6 +1,4 @@
-Restful Route Version plugin
-
-* * * * *
+# Restful Route Version plugin #
 
 Features
 ----------
@@ -13,13 +11,11 @@ Features
         v10_routes.resources :comments
         v10_routes.resources :notes
       end
-      
       api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
         v11_routes.inherit_routes("api/v10", :except => %w(articles))
         v11_routes.resources :tags
         v11_routes.resources :articles, :collection => {:search => :get }
       end
-  
       api_routes.version_namespace(:v12) do |v12_routes|
         v12_routes.inherit_routes("api/v11")
         v12_routes.resources :lessons
