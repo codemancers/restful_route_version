@@ -22,14 +22,18 @@ Features
       end
     end
 
-2. Dynamically defines controllers between versions. So if `v11` inherits `NotesController`
-   from `v10`, and `v11` doesn't have its own `NotesController` defined the, plugin will
-   automatically define `Api::V11::NotesController` which will inherit from `Api::V10::NotesController`.
+2. Dynamically defines controllers between versions. So if v11 inherits 'notes' route
+   from v10, and v11 doesn't have its own NotesController defined the, plugin will
+   automatically define Api::V11::NotesController which will inherit from Api::V10::NotesController.
 
 
 Known Issues
 ----------
-1. If `Api::V10::NotesController` uses view files such as `index.xml.erb`, the derived controller `Api::V11::NotesController` will try to find view files under `app/views/api/v11/notes` rather than `app/views/api/v10/notes`.
+1. If `Api::V10::NotesController` uses view files such as `index.xml.erb`, the meta-programmatically defined
+  derived controller `Api::V11::NotesController` will try to find view files under `app/views/api/v11/notes`
+  rather than `app/views/api/v10/notes`.
+
+  
 
    
 
