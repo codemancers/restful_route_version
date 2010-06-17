@@ -4,7 +4,9 @@ module RestfulRouteVersion
     def version_namespace(name, options = {}, &block)
       new_options =
         if options[:namespace]
-          {:path_prefix => "#{options.delete(:path_prefix)}/#{name}", :name_prefix => "#{options.delete(:name_prefix)}#{name}_", :namespace => "#{options.delete(:namespace)}#{name}/"}.merge(options)
+          {:path_prefix => "#{options.delete(:path_prefix)}/#{name}", 
+          :name_prefix => "#{options.delete(:name_prefix)}#{name}_", 
+          :namespace => "#{options.delete(:namespace)}#{name}/"}.merge(options)
         else
           {:path_prefix => name, :name_prefix => "#{name}_", :namespace => "#{name}/"}.merge(options)
         end
