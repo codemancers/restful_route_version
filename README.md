@@ -4,7 +4,6 @@ Features
 ----------
 
 1. Lets you inherit routes between versions
-
     map.version_namespace :api do |api_routes|
       api_routes.version_namespace(:v10,:cache_route => true) do |v10_routes|
         v10_routes.resources :articles
