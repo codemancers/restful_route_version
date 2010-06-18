@@ -149,6 +149,7 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
       ActiveSupport::Dependencies.remove_constant("Api::V12::QuestionsController")
       @route_set = ActionController::Routing::RouteSet.new()
       @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
+      
       @route_block = lambda do |map|
         map.version_namespace :api do |api_routes|
           api_routes.version_namespace(:v10,:cache_route => true) do |v10_routes|
@@ -167,9 +168,9 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
             v12_routes.inherit_routes("api/v11")
             v12_routes.resources :lessons
           end
-          
         end #end of map.version_namespace(:api)
       end #end of route_block
+
     end #end of setup block
 
     should "not create controllers in only specified namespace" do

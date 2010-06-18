@@ -8,7 +8,6 @@ require "active_support"
 require "action_controller"
 require "action_view"
 require "action_pack"
-require "initializer"
 
 require "shoulda"
 
@@ -24,6 +23,20 @@ class MockLogger
   end
 end
 
+class MockBacktraceCleaner
+  attr_reader :backtrace
+
+  def initialize
+    @backtrace = []
+  end
+
+  def method_missing(method,*args)
+    @backtrace << args.first
+  end
+end
+
+
+
 
 module Rails
   def self.root
@@ -31,11 +44,7 @@ module Rails
   end
 
   def self.backtrace_cleaner
-    @@backtrace_cleaner ||= begin
-      # Relies on ActiveSupport, so we have to lazy load to postpone definition until AS has been loaded
-      require 'rails/backtrace_cleaner'
-      Rails::BacktraceCleaner.new
-    end
+    @@backtrace_cleaner ||= MockBacktraceCleaner.new()
   end
 end
 
