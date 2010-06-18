@@ -35,9 +35,9 @@ Features
    assuming you have some sort of base controller for your controllers which needs to be versioned, you will need
    to add:
 
-    class Api::V10::BaseController < ActionController::Base
-      restful_route_version
-    end
+        class Api::V10::BaseController < ActionController::Base
+            restful_route_version
+        end
 
    You can add `restful_route_version` to ApplicationController as well, but since the plugin replaces template
    finding logic of rails, it may not be useful for entire set of controllers.
