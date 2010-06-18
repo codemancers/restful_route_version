@@ -23,16 +23,7 @@ class MockLogger
   end
 end
 
-class MockBacktraceCleaner
-  attr_reader :backtrace
-
-  def initialize
-    @backtrace = []
-  end
-
-  def method_missing(method,*args)
-    @backtrace << args.first
-  end
+class MockBacktraceCleaner < ActiveSupport::BacktraceCleaner
 end
 
 

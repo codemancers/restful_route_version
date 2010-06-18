@@ -96,5 +96,6 @@ class RestfulRouteVersionControllerPathTest < ActionController::TestCase
         assert_match /Calling Songs\#show from v11/, @response.body
       end
     end
+
   end
 end
