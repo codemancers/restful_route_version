@@ -1,5 +1,6 @@
-module ActionController
-  class Base
+module RestfulRouteVersion
+  module RestfulRouteVersionControllerPath
+    
     def default_template(action_name = self.action_name)
       @@cached_template_paths ||= {}
       template_cache_key = "#{default_template_name(action_name)}.#{default_template_format}"
@@ -9,7 +10,7 @@ module ActionController
         @@cached_template_paths[template_cache_key] = t
         t
       rescue ActionView::MissingTemplate => template_error
-        template_from_cache = return_from_cache(template_cache_key)
+        template_from_cache = find_from_template_cache(template_cache_key)
         return template_from_cache if template_from_cache
         base_klass = base_klass.superclass
         raise template_error unless base_klass < ::ActionController::Base
@@ -17,7 +18,7 @@ module ActionController
       end
     end
 
-    def return_from_cache(template_cache_key)
+    def find_from_template_cache(template_cache_key)
       ActionView::Base.cache_template_loading && @@cached_template_paths[template_cache_key]
     end
 

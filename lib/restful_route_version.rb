@@ -7,7 +7,14 @@ ActiveSupport::Dependencies.extend(RestfulRouteVersion::RestfulRouteVersionDepen
 ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::RestfulRouteVersionDependencies)
 ActionController::Routing::RouteSet::Mapper.send(:include, RestfulRouteVersion::RestfulRouteVersionRouteSet)
 
-
+module RestfulRouteVersion
+  module ActionControllerExtension
+    unloadable
+    def restful_route_version
+      include RestfulRouteVersion::RestfulRouteVersionControllerPath
+    end
+  end
+end
 
 
 

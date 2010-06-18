@@ -27,11 +27,9 @@ Features
    automatically define Api::V11::NotesController which will inherit from Api::V10::NotesController.
 
 
-3. Inherits view files (such as index.xml.builder) between versions. If `v10/articles/index.xml.builder` and
-   `v11/articles_controller.rb `inherits v10's controller, it will as well inherit default `index.xml.builder` file.
-   Each view associated can be selectively overriden and hence if v11/articles has its own `index.xml.builder` file,
-   but will fallback to base class `index.xml.builder` if it didn't exist.
-
+3. Inherits view files (such as index.xml.builder) between versions. For example if `V11::ArticlesController`
+   inherits `V10::ArticlesController` it will as well inherit all the view files of `v10/articles/`
+   and hence there won't be any need to copy the view files around when creating new version of the API.
 
 4. Code is generally pretty well covered.
 
