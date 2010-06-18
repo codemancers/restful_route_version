@@ -31,9 +31,21 @@ Features
    inherits `V10::ArticlesController` it will as well inherit all the view files of `v10/articles/`
    and hence there won't be any need to copy the view files around when creating new version of the API.
 
-4. Code is generally pretty well covered.
+   However view file inheritance doesn't work out of the box and you will have to explicitly enable it. Currently
+   assuming you have some sort of base controller for your controllers which needs to be versioned, you will need
+   to add:
 
-Waring
+    class Api::V10::BaseController < ActionController::Base
+      restful_route_version
+    end
+
+   You can add `restful_route_version` to ApplicationController as well, but since the plugin replaces template
+   finding logic of rails, it may not be useful for entire set of controllers.
+
+
+4. Code is generally pretty test well covered.
+
+Warning
 ----------
 
 Might be still rough around the edges
