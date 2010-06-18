@@ -46,7 +46,6 @@ end
 
 
 class RestfulRouteVersionControllerPathTest < ActionController::TestCase
-  tests Api::V10::SongsController
   context "For finding template path of derived controllers" do
     setup do
 
@@ -73,17 +72,29 @@ class RestfulRouteVersionControllerPathTest < ActionController::TestCase
         end #end of map.version_namespace(:api)
       end
       ActionController::Base.prepend_view_path("#{Rails.root}/app/views")
+      self.class.tests Api::V11::SongsController
     end #end of setup block
 
-    context "find templates correctly" do
+    context "find templates correctly from index action of base class" do
       setup do
         @controller.logger = MockLogger.new
         get :index
       end
-      should "run correctly" do
+      should "find and render template" do
         assert_response :success
         assert_match /Hello from v10 of Music\#index/,@response.body
       end
     end #end of context find_templates_correctly
+
+    context "find templates correctly directly if available" do
+      setup do
+        @controller.logger = MockLogger.new
+        get :show, :id => 10
+      end
+      should "find and render template" do
+        assert_response :success
+        assert_match /Calling Songs\#show from v11/, @response.body
+      end
+    end
   end
 end
