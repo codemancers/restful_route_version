@@ -1,11 +1,14 @@
 require File.join(File.dirname(__FILE__), "test_helper")
 require File.join(File.dirname(__FILE__), "rails_sandbox/app/controllers/api/v10/songs_controller")
+module Api
+  module V10; end
+  module V11; end
+end
 
-class RestfulRouteVersionControllerPathTest < ActionController::TestCase
+class Api::V10::SongsControllerTest < ActionController::TestCase
   tests Api::V10::SongsController
   context "For finding template path of controllers which implement their own views" do
     setup do
-
       ActionController::Routing::Routes.draw do |map|
         map.version_namespace :api do |api_routes|
           api_routes.version_namespace(:v10, :cache_route => true) do |v10_routes|
@@ -45,10 +48,9 @@ class RestfulRouteVersionControllerPathTest < ActionController::TestCase
 end
 
 
-class RestfulRouteVersionControllerPathTest < ActionController::TestCase
+class Api::V11::SongsControllerTest < ActionController::TestCase
   context "For finding template path of derived controllers" do
     setup do
-
       ActionController::Routing::Routes.draw do |map|
         map.version_namespace :api do |api_routes|
           api_routes.version_namespace(:v10, :cache_route => true) do |v10_routes|
@@ -82,7 +84,7 @@ class RestfulRouteVersionControllerPathTest < ActionController::TestCase
       end
       should "find and render template" do
         assert_response :success
-        assert_match /Hello from v10 of Music\#index/,@response.body
+        assert_match /Hello from v10 of Music#index/,@response.body
       end
     end #end of context find_templates_correctly
 
@@ -93,7 +95,7 @@ class RestfulRouteVersionControllerPathTest < ActionController::TestCase
       end
       should "find and render template" do
         assert_response :success
-        assert_match /Calling Songs\#show from v11/, @response.body
+        assert_match /Calling Songs#show from v11/, @response.body
       end
     end
 
