@@ -25,6 +25,15 @@ module RestfulRouteVersion
       ActionView::Base.cache_template_loading && @@cached_template_paths[template_cache_key]
     end
 
+    def initialize_template_class(response)
+      response.template = ActionView::Base.new(self.class.view_paths, {}, self)
+      response.template.extend(RestfulRouteVersionPartialPath)
+      response.template.helpers.send :include, self.class.master_helper_module
+      response.redirected_to = nil
+      @performed_render = @performed_redirect = false
+    end
+
+
     def find_base_klass_template(base_klass,action_name = self.action_name)
       if action_name
         action_name = action_name.to_s
@@ -35,10 +44,8 @@ module RestfulRouteVersion
       "#{base_klass.controller_path}/#{action_name}"
     end
   end
-end
-
-module ActionView
-  class Base
+  
+  module RestfulRouteVersionPartialPath
     def _pick_partial_template(partial_path)
       base_klass = self.controller.class
       begin
@@ -62,6 +69,5 @@ module ActionView
       
       self.view_paths.find_template(path, self.template_format)
     end
-
   end
 end
