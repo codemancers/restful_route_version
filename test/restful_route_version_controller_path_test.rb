@@ -57,7 +57,7 @@ class Api::V11::SongsControllerTest < ActionController::TestCase
             v10_routes.resources :articles
             v10_routes.resources :notes
             v10_routes.resources :questions
-            v10_routes.resources :songs
+            v10_routes.resources :songs, :collection => { :foo => :get }
           end
 
           api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
@@ -96,6 +96,17 @@ class Api::V11::SongsControllerTest < ActionController::TestCase
       should "find and render template" do
         assert_response :success
         assert_match /Calling Songs#show from v11/, @response.body
+      end
+    end
+
+    context "find partials correctly for derived controllers" do  
+      setup do
+        @controller.logger = MockLogger.new()
+        get :foo
+      end
+      should "find and render template" do
+        assert_response :success
+        assert_match /Calling foo from bar/i, @response.body
       end
     end
 

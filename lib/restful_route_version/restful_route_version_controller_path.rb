@@ -19,6 +19,8 @@ module RestfulRouteVersion
       end
     end
 
+    
+
     def find_from_template_cache(template_cache_key)
       ActionView::Base.cache_template_loading && @@cached_template_paths[template_cache_key]
     end
@@ -32,5 +34,34 @@ module RestfulRouteVersion
       end
       "#{base_klass.controller_path}/#{action_name}"
     end
+  end
+end
+
+module ActionView
+  class Base
+    def _pick_partial_template(partial_path)
+      base_klass = self.controller.class
+      begin
+        t = _pick_klass_partial_template(partial_path,base_klass)
+        t
+      rescue ActionView::MissingTemplate => template_error
+        base_klass = base_klass.superclass
+        raise template_error unless base_klass < ::ActionController::Base
+        retry
+      end
+    end
+
+    def _pick_klass_partial_template(partial_path,base_klass)
+      if partial_path.include?('/')
+        path = File.join(File.dirname(partial_path), "_#{File.basename(partial_path)}")
+      elsif controller
+        path = "#{base_klass.controller_path}/_#{partial_path}"
+      else
+        path = "_#{partial_path}"
+      end
+      
+      self.view_paths.find_template(path, self.template_format)
+    end
+
   end
 end
