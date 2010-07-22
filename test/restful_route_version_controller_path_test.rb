@@ -1,5 +1,6 @@
 require File.join(File.dirname(__FILE__), "test_helper")
 require File.join(File.dirname(__FILE__), "rails_sandbox/app/controllers/api/v10/songs_controller")
+
 module Api
   module V10; end
   module V11; end
@@ -57,7 +58,7 @@ class Api::V11::SongsControllerTest < ActionController::TestCase
             v10_routes.resources :articles
             v10_routes.resources :notes
             v10_routes.resources :questions
-            v10_routes.resources :songs, :collection => { :foo => :get }
+            v10_routes.resources :songs, :collection => { :foo => :get, :bar => :get, :baz => :get }
           end
 
           api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
@@ -107,6 +108,25 @@ class Api::V11::SongsControllerTest < ActionController::TestCase
       should "find and render template" do
         assert_response :success
         assert_match /Calling foo from bar/i, @response.body
+      end
+    end
+
+    context "raise error when unable to find partials in derived controllers" do
+      should "fail to find and render template" do
+        assert_raises(ActionView::TemplateError) do
+          get :bar
+        end
+      end
+    end
+
+    context "find partials correctly for direct controllers" do
+      setup do
+        @controller.logger = MockLogger.new()
+        get :baz
+      end
+      should "find and render template" do
+        assert_response :success
+        assert_match /Hello from baz/i, @response.body
       end
     end
 
