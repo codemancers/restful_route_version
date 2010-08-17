@@ -34,7 +34,7 @@ module RestfulRouteVersion
       current_namespace = options[:namespace]
       controllers_to_exclude = exclude_constants.map { |x| (old_namespace + "/#{x}Controller").camelize }
       old_namespace.camelize.constantize.constants.each do |constant_name|
-        full_constant_name = old_namespace.camelize + "::" + constant_name
+        full_constant_name = old_namespace.camelize + "::" + constant_name.to_s
         new_controller_name = "#{current_namespace.camelize}#{constant_name}"
         if create_controller_dynamically?(controllers_to_exclude, full_constant_name, new_controller_name)
           create_controller_class(new_controller_name,Class.new(full_constant_name.constantize))
