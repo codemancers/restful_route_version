@@ -22,6 +22,9 @@ Features
             end
         end
 
+   One thing to note is only routes which were cached via `cache_route => true` can be 
+   reused for inheritance. Normal namespace blocks aren't cached.
+   
 2. Dynamically defines controllers between versions. So if v11 inherits 'notes' route
    from v10, and v11 doesn't have its own NotesController defined the, plugin will
    automatically define Api::V11::NotesController which will inherit from Api::V10::NotesController.
