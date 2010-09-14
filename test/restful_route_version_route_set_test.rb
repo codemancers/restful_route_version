@@ -55,7 +55,7 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
           end
 
           api_routes.version_namespace(:v12) do |v12_routes|
-            v12_routes.inherit_routes("api/v11")
+            v12_routes.inherit_routes("api/v11",:except => %w(notes))
             v12_routes.resources :lessons
           end
   
@@ -69,6 +69,12 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
       v12_tag_route = @route_set.named_routes.routes[:edit_api_v12_tag]
       assert !v12_tag_route.blank?
       assert_match /\/api\/v12\/tags\/\:id\/edit/, v12_tag_route.to_s
+    end
+    
+    should "not create routes for except resources" do
+      @route_block.call(@mapper)
+      note_route = @route_set.named_routes.routes[:new_api_v12_note]
+      assert note_route.blank?
     end
   end
 
@@ -110,7 +116,7 @@ class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
     end
   end #end of context inherit_routes
 
-  context "Inheri controller with except" do 
+  context "Inherit controller with except" do 
     setup do 
       @route_set = ActionController::Routing::RouteSet.new()
       @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
