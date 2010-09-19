@@ -2,14 +2,7 @@ module RestfulRouteVersion
   module RestfulRouteVersionRouteSet
     attr_accessor :cached_namespace_blocks
     def version_namespace(name, options = {}, &block)
-      new_options =
-        if options[:namespace]
-          {:path_prefix => "#{options.delete(:path_prefix)}/#{name}", 
-          :name_prefix => "#{options.delete(:name_prefix)}#{name}_", 
-          :namespace => "#{options.delete(:namespace)}#{name}/"}.merge(options)
-        else
-          {:path_prefix => name, :name_prefix => "#{name}_", :namespace => "#{name}/"}.merge(options)
-        end
+      namespace(name,options,&block)
       @cached_namespace_blocks ||= {}
       create_controller_class(new_options[:path_prefix].to_s.camelize,Module.new)
       @cached_namespace_blocks[new_options[:path_prefix]] = block if options[:cache_route]

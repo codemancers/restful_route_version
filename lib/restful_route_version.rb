@@ -3,15 +3,21 @@ require "restful_route_version/restful_route_version_dependencies"
 require "restful_route_version/restful_route_version_route_set"
 require "restful_route_version/restful_route_version_controller_path"
 
-ActiveSupport::Dependencies.extend(RestfulRouteVersion::RestfulRouteVersionDependencies)
-ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::RestfulRouteVersionDependencies)
-ActionController::Routing::RouteSet::Mapper.send(:include, RestfulRouteVersion::RestfulRouteVersionRouteSet)
-
 module RestfulRouteVersion
-  module ActionControllerExtension
-    unloadable
-    def restful_route_version
-      include RestfulRouteVersion::RestfulRouteVersionControllerPath
+  VERSION = '0.0.1'
+  class Railtie < Rails::Railtie
+
+    initialize "restful_route_version.configure_rails_initialization" do
+      ActionController::Routing::RouteSet::Mapper.send(:include, RestfulRouteVersion::RestfulRouteVersionRouteSet)
+      ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::RestfulRouteVersionDependencies)
+      ActiveSupport::Dependencies.extend(RestfulRouteVersion::RestfulRouteVersionDependencies)
+
+      ActionController::Base.class_eval do
+        def restful_route_version
+          include RestfulRouteVersion::RestfulRouteVersionControllerPath
+        end
+      end
+
     end
   end
 end
