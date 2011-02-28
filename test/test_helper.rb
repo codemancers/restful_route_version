@@ -1,8 +1,8 @@
 require "rubygems"
-gem 'activesupport', '~> 2.3.4'
-gem 'actionpack', '~> 2.3.4'
-gem 'activerecord', '~> 2.3.4'
-gem 'rails', '~> 2.3.4'
+gem 'activesupport', '~> 3.0.3'
+gem 'actionpack', '~> 3.0.3'
+gem 'activerecord', '~> 3.0.3'
+gem 'rails', '~> 3.0.3'
 
 require "active_support"
 require "action_controller"
