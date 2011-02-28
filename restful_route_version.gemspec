@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Hemant Kumar"]
-  s.date = %q{2010-09-19}
+  s.date = %q{2011-03-01}
   s.description = %q{Versioning your routes in Rails3}
   s.email = %q{gethemant@gmail.com}
   s.extra_rdoc_files = [
@@ -24,11 +24,14 @@ Gem::Specification.new do |s|
      "MIT-LICENSE",
      "README.md",
      "Rakefile",
+     "VERSION",
      "lib/restful_route_version.rb",
+     "lib/restful_route_version/railtie.rb",
      "lib/restful_route_version/restful_route_version_controller_path.rb",
      "lib/restful_route_version/restful_route_version_dependencies.rb",
      "lib/restful_route_version/restful_route_version_option_merger.rb",
      "lib/restful_route_version/restful_route_version_route_set.rb",
+     "restful_route_version.gemspec",
      "test/fixture_files/a.rb",
      "test/fixture_files/b.rb",
      "test/fixture_files/c.rb",
