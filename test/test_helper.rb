@@ -49,8 +49,3 @@ ActionDispatch::Routing::Mapper.send(:include, RestfulRouteVersion::VersionMappe
 ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::DependencyExt)
 ActiveSupport::Dependencies.extend(RestfulRouteVersion::DependencyExt)
 
-ActionController::Base.class_eval do
-  def restful_route_version
-    include RestfulRouteVersion::ControllerPathExt
-  end
-end
