@@ -13,8 +13,8 @@ class VersionMapperTest < Test::Unit::TestCase
 
     should "capture specified namespace when using version_namespace" do
       route_block = lambda do |map|
-        map.version_namespace("foo") do |foo_route|
-          foo_route.resources :articles
+        version_namespace("foo") do |foo_route|
+          resources :articles
         end
       end
       route_block.call(@mapper)
@@ -23,10 +23,11 @@ class VersionMapperTest < Test::Unit::TestCase
 
     should "capture route block if cache_route is true when using version_namespace" do
       route_block = lambda do |map|
-        map.version_namespace("foo", :cache_route => true) do |foo_route|
-          foo_route.resources :articles
+        version_namespace("foo", :cache_route => true) do
+          resources :articles
         end
       end
+
       route_block.call(@mapper)
       assert !@mapper.cached_namespace_blocks["foo"].blank?
     end
@@ -38,28 +39,28 @@ class VersionMapperTest < Test::Unit::TestCase
 
   context "Restful route extension with inherit_routes" do 
     setup do
-      @route_set = ActionController::Routing::RouteSet.new()
-      @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
-      @route_block = lambda do |map|
-        map.version_namespace :api do |api_routes|
-          api_routes.version_namespace(:v10,:cache_route => true) do |v10_routes|
-            v10_routes.resources :articles
-            v10_routes.resources :comments
-            v10_routes.resources :notes
+      @route_set = ActionDispatch::Routing::RouteSet.new()
+      @mapper = ActionDispatch::Routing::Mapper.new(@route_set)
+      
+      @route_block = lambda do
+        version_namespace :api do
+          version_namespace(:v10,:cache_route => true) do 
+            resources :articles
+            resources :comments
+            resources :notes
           end
   
-          api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
-            v11_routes.inherit_routes("api/v10", :except => %w(articles))
-            v11_routes.resources :tags
-            v11_routes.resources :articles, :collection => {:search => :get }
+          version_namespace(:v11, :cache_route => true) do
+            inherit_routes("api/v10", :except => %w(articles))
+            resources :tags
+            resources :articles, :collection => {:search => :get }
           end
 
-          api_routes.version_namespace(:v12) do |v12_routes|
-            v12_routes.inherit_routes("api/v11",:except => %w(notes))
-            v12_routes.resources :lessons
+          version_namespace(:v12) do
+            inherit_routes("api/v11",:except => %w(notes))
+            resources :lessons
           end
-  
-        end #end of map.version_namespace(:api)
+          end #end of map.version_namespace(:api)
       end #end of route_block
   
     end #end of setup block
@@ -80,24 +81,25 @@ class VersionMapperTest < Test::Unit::TestCase
 
   context "Restful route extension with inherit_routes" do
     setup do 
-      @route_set = ActionController::Routing::RouteSet.new()
-      @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
-      @route_block = lambda do |map|
-        map.version_namespace :api do |api_routes|
-          api_routes.version_namespace(:v10,:cache_route => true) do |v10_routes|
-            v10_routes.resources :articles
-            v10_routes.resources :notes
+      @route_set = ActionDispatch::Routing::RouteSet.new()
+      @mapper = ActionDispatch::Routing::Mapper.new(@route_set)
+
+      @route_block = lambda do
+        version_namespace :api do
+          version_namespace(:v10,:cache_route => true) do
+            resources :articles
+            resources :notes
           end
   
-          api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
-            v11_routes.inherit_routes("api/v10", :except => %w(articles))
-            v11_routes.resources :tags
-            v11_routes.resources :articles, :collection => {:search => :get }
+          version_namespace(:v11, :cache_route => true) do
+            inherit_routes("api/v10", :except => %w(articles))
+            resources :tags
+            resources :articles, :collection => {:search => :get }
           end
 
-          api_routes.version_namespace(:v12) do |v12_routes|
-            v12_routes.inherit_routes("api/v11")
-            v12_routes.resources :lessons
+          version_namespace(:v12) do
+            inherit_routes("api/v11")
+            resources :lessons
           end
   
         end #end of map.version_namespace(:api)
@@ -118,24 +120,25 @@ class VersionMapperTest < Test::Unit::TestCase
 
   context "Inherit controller with except" do 
     setup do 
-      @route_set = ActionController::Routing::RouteSet.new()
-      @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
-      @route_block = lambda do |map|
-        map.version_namespace :api do |api_routes|
-          api_routes.version_namespace(:v10,:cache_route => true) do |v10_routes|
-            v10_routes.resources :articles
-            v10_routes.resources :notes
+      @route_set = ActionDispatch::Routing::RouteSet.new()
+      @mapper = ActionDispatch::Routing::Mapper.new(@route_set)
+
+      @route_block = lambda do
+        version_namespace :api do
+          version_namespace(:v10,:cache_route => true) do
+            resources :articles
+            resources :notes
           end
   
-          api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
-            v11_routes.inherit_routes("api/v10", :except => %w(articles))
-            v11_routes.resources :tags
-            v11_routes.resources :articles, :collection => {:search => :get }
+          version_namespace(:v11, :cache_route => true) do
+            inherit_routes("api/v10", :except => %w(articles))
+            resources :tags
+            resources :articles, :collection => {:search => :get }
           end
 
-          api_routes.version_namespace(:v12) do |v12_routes|
-            v12_routes.inherit_routes("api/v11")
-            v12_routes.resources :lessons
+          version_namespace(:v12) do
+            inherit_routes("api/v11")
+            resources :lessons
           end
   
         end #end of map.version_namespace(:api)

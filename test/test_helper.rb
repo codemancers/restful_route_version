@@ -5,6 +5,7 @@ gem 'activerecord', '~> 3.0.7'
 gem 'rails', '~> 3.0.7'
 
 require "active_support"
+require "active_support/dependencies"
 require "action_controller"
 require "action_view"
 require "action_pack"
@@ -44,3 +45,12 @@ $:<< File.join(File.dirname(__FILE__), "rails_sandbox", "app", "controllers")
 
 require "restful_route_version"
 
+ActionDispatch::Routing::Mapper.send(:include, RestfulRouteVersion::VersionMapper)
+ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::DependencyExt)
+ActiveSupport::Dependencies.extend(RestfulRouteVersion::DependencyExt)
+
+ActionController::Base.class_eval do
+  def restful_route_version
+    include RestfulRouteVersion::ControllerPathExt
+  end
+end
