@@ -1,17 +1,21 @@
 module RestfulRouteVersion
-  module RestfulRouteVersionRouteSet
+  module VersionMapper
     attr_accessor :cached_namespace_blocks
-    def version_namespace(name, options = {}, &block)
-      namespace(name,options,&block)
+    def version_namespace(path, options = {}, &block)
+      path = path.to_s
+      options = { :path => path, :as => path, :module => path,
+                  :shallow_path => path, :shallow_prefix => path }.merge!(options)
+
       @cached_namespace_blocks ||= {}
-      create_controller_class(new_options[:path_prefix].to_s.camelize,Module.new)
-      @cached_namespace_blocks[new_options[:path_prefix]] = block if options[:cache_route]
-      with_options(new_options, &block)
+      create_controller_class(options[:path].to_s.camelize,Module.new)
+      @cached_namespace_blocks[new_options[:path]] = block if options[:cache_route]
+      scope(options) { block.call }
     end
 
-    def inherit_routes(* entities)
+    def inherit_routes(*entities)
       options = entities.extract_options!
-      options[:old_namespace] ||= entities.first
+      options[:path] = { :path => path }.merge!(options)
+
       entities.each { |entity|
         inherited_route_block = @cached_namespace_blocks[entity]
         with_versioned_options(options, &inherited_route_block)
@@ -54,10 +58,6 @@ module RestfulRouteVersion
           constant = constant.const_set(name, klass_constant)
         end
       end
-    end
-
-    def with_versioned_options(options = {})
-      yield RestfulRouteVersionOptionMerger.new(self, options)
     end
   end
 end

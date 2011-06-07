@@ -2,7 +2,7 @@ require "rails"
 
 require "restful_route_version_option_merger"
 require "restful_route_version_dependencies"
-require "restful_route_version_route_set"
+require "version_mapper"
 require "restful_route_version_controller_path"
 
 module RestfulRouteVersion
@@ -10,7 +10,7 @@ module RestfulRouteVersion
   class Railtie < Rails::Railtie
 
     initialize "restful_route_version.configure_rails_initialization" do
-      ActionController::Routing::RouteSet::Mapper.send(:include, RestfulRouteVersion::RestfulRouteVersionRouteSet)
+      ActionDispatch::Routing::Mapper.send(:include, RestfulRouteVersion::VersionMapper)
       ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::RestfulRouteVersionDependencies)
       ActiveSupport::Dependencies.extend(RestfulRouteVersion::RestfulRouteVersionDependencies)
 

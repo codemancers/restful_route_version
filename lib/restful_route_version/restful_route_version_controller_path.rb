@@ -9,9 +9,9 @@ module RestfulRouteVersion
       
       base_klass = self.class
       begin
-        t = self.view_paths.find_template(find_base_klass_template(base_klass,action_name), default_template_format)
-        @@cached_template_paths[template_cache_key] = t
-        t
+        self.view_paths.find_template(find_base_klass_template(base_klass,action_name), default_template_format).tap do |t|
+          @@cached_template_paths[template_cache_key] = t
+        end
       rescue ActionView::MissingTemplate => template_error
         base_klass = base_klass.superclass
         raise template_error unless base_klass < ::ActionController::Base
@@ -61,9 +61,9 @@ module RestfulRouteVersion
       
       begin
         path = "#{base_klass.controller_path}/_#{partial_path}"
-        t = self.view_paths.find_template(path, self.template_format)
-        @@cached_partial_paths[partial_cache_key] = t
-        t
+        self.view_paths.find_template(path, self.template_format).tap do |t|
+          @@cached_partial_paths[partial_cache_key] = t
+        end
       rescue ActionView::MissingTemplate => template_error
         base_klass = base_klass.superclass
         raise template_error unless base_klass < ::ActionController::Base

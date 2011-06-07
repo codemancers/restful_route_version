@@ -1,10 +1,10 @@
 require File.join(File.dirname(__FILE__),"test_helper")
 
-class RestfulRouteVersionRouteSetTest < Test::Unit::TestCase
+class VersionMapperTest < Test::Unit::TestCase
   context "Versioned routing extension" do
     setup do
-      @route_set = ActionController::Routing::RouteSet.new()
-      @mapper = ActionController::Routing::RouteSet::Mapper.new(@route_set)
+      @route_set = ActionDispatch::Routing::RouteSet.new()
+      @mapper = ActionDispatch::Routing::Mapper.new(@route_set)
     end
   
     should "provide version_namespace routing method" do
