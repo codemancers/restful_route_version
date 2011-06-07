@@ -5,20 +5,23 @@ module RestfulRouteVersion
       path = path.to_s
       options = { :path => path, :as => path, :module => path,
                   :shallow_path => path, :shallow_prefix => path }.merge!(options)
-
+      
       @cached_namespace_blocks ||= {}
-      create_controller_class(options[:path].to_s.camelize,Module.new)
-      @cached_namespace_blocks[new_options[:path]] = block if options[:cache_route]
-      scope(options) { block.call }
+      
+
+      scope(options) { 
+        create_controller_class(@scope[:module].to_s.camelize,Module.new)
+        @cached_namespace_blocks[@scope[:path]] = block if options[:cache_route]
+        block.call 
+      }
     end
 
     def inherit_routes(*entities)
       options = entities.extract_options!
-      options[:path] = { :path => path }.merge!(options)
-
+      options[:old_namespace] = entities.dup.shift
       entities.each { |entity|
         inherited_route_block = @cached_namespace_blocks[entity]
-        with_versioned_options(options, &inherited_route_block)
+        self.instance_exec &inherited_route_block
       }
       create_derived_controllers(options[:old_namespace], options)
     end
