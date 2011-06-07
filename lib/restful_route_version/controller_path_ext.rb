@@ -1,5 +1,5 @@
 module RestfulRouteVersion
-  module RestfulRouteVersionControllerPath
+  module ControllerPathExt
     
     def default_template(action_name = self.action_name)
       @@cached_template_paths ||= {}

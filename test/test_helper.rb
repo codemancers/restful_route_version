@@ -1,8 +1,8 @@
 require "rubygems"
-gem 'activesupport', '~> 3.0.3'
-gem 'actionpack', '~> 3.0.3'
-gem 'activerecord', '~> 3.0.3'
-gem 'rails', '~> 3.0.3'
+gem 'activesupport', '~> 3.0.7'
+gem 'actionpack', '~> 3.0.7'
+gem 'activerecord', '~> 3.0.7'
+gem 'rails', '~> 3.0.7'
 
 require "active_support"
 require "action_controller"
@@ -43,4 +43,4 @@ $:<< File.join(File.dirname(__FILE__), "..", "lib")
 $:<< File.join(File.dirname(__FILE__), "rails_sandbox", "app", "controllers")
 
 require "restful_route_version"
-ActionController::Base.extend(RestfulRouteVersion::ActionControllerExtension)
+

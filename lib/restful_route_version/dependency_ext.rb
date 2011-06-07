@@ -1,11 +1,11 @@
 module RestfulRouteVersion
-  module RestfulRouteVersionDependencies
+  module DependencyExt
     def self.included(base)
       base.send(:remove_method, :remove_unloadable_constants!)
     end
     
     mattr_accessor :dynamically_defined_constants
-    @@dynamically_defined_constants = Set.new()
+    self.dynamically_defined_constants = Set.new()
 
     # FIXME: make this more graceful without removing existing method
     def remove_unloadable_constants!
