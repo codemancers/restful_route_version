@@ -29,34 +29,53 @@ module RestfulRouteVersion
     end
 
     def skip_resource?(resources, except_options)
+      #puts "********** incoming #{resources.inspect} and except_options #{except_options.inspect} and path #{@scope[:path]} **********"
       return false if(resources.length > 1 || except_options.blank?)
       return true if except_options.include?(resources.first.to_s)
       false
     end
 
     def inherit_routes(*entities)
+      #puts "Current path #{@scope[:path]} and old one #{entities.first}"
       options = entities.extract_options!
-      options[:old_namespace] = entities.dup.shift
+      new_options = merge_except_options(options)
+      #puts "New options are #{new_options.inspect}"
+      new_options[:old_namespace] = @scope[:options][:old_namespace] || entities.dup.shift
+
 
       entities.each { |entity|
         inherited_route_block = @cached_namespace_blocks[entity]
-        scope(options) do
+        inherited_route_block && scope(new_options) do
           inherited_route_block.call()
         end
       }
-      create_derived_controllers(options[:old_namespace], options)
+      create_derived_controllers(new_options[:old_namespace], new_options)
+    end
+
+    def merge_except_options(options)
+      options[:except] ||= []
+      options[:namespace] = @scope[:path]
+      if old_exception_option = @scope[:options][:except]
+        options[:except] += old_exception_option
+      end
+      options
     end
 
     def create_derived_controllers(old_namespace, options = {})
+      old_namespace.gsub!(/^\/?/,'')
+      current_namespace = options[:namespace].gsub(/^\/?/,'')
       Dir["#{Rails.root}/app/controllers/#{old_namespace}/*.rb"].each do |controller_file_name|
         require_or_load(controller_file_name)
       end
+
       exclude_constants = options[:except].blank? ? [] : options[:except]
-      current_namespace = options[:namespace]
+
       controllers_to_exclude = exclude_constants.map { |x| (old_namespace + "/#{x}Controller").camelize }
+
       old_namespace.camelize.constantize.constants.each do |constant_name|
         full_constant_name = old_namespace.camelize + "::" + constant_name.to_s
-        new_controller_name = "#{current_namespace.camelize}#{constant_name}"
+        new_controller_name = "#{current_namespace.camelize}::#{constant_name}"
+        #puts "Defining constant #{new_controller_name} with parent #{full_constant_name}"
         if create_controller_dynamically?(controllers_to_exclude, full_constant_name, new_controller_name)
           create_controller_class(new_controller_name,Class.new(full_constant_name.constantize))
         end

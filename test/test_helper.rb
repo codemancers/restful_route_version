@@ -6,10 +6,10 @@ gem 'rails', '~> 3.0.7'
 
 require "active_support"
 require "active_support/dependencies"
+require "active_support/core_ext/hash/slice"
 require "action_controller"
 require "action_view"
 require "action_pack"
-require "action_dispatch"
 
 require "shoulda"
 
@@ -28,8 +28,10 @@ end
 class MockBacktraceCleaner < ActiveSupport::BacktraceCleaner
 end
 
+$:<< File.join(File.dirname(__FILE__), "..", "lib")
+$:<< File.join(File.dirname(__FILE__), "rails_sandbox", "app", "controllers")
 
-
+require "restful_route_version"
 
 module Rails
   def self.root
@@ -41,10 +43,9 @@ module Rails
   end
 end
 
-$:<< File.join(File.dirname(__FILE__), "..", "lib")
-$:<< File.join(File.dirname(__FILE__), "rails_sandbox", "app", "controllers")
+puts "Loading file... #{Rails.root}"
 
-require "restful_route_version"
+
 
 ActionDispatch::Routing::Mapper.send(:include, RestfulRouteVersion::VersionMapper)
 ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::DependencyExt)
