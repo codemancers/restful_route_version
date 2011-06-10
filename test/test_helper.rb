@@ -9,6 +9,7 @@ require "active_support/dependencies"
 require "action_controller"
 require "action_view"
 require "action_pack"
+require "action_dispatch"
 
 require "shoulda"
 

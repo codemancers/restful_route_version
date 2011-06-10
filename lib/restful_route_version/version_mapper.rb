@@ -16,12 +16,33 @@ module RestfulRouteVersion
       }
     end
 
+    def resources(*resources, &block)
+      except_options = @scope[:options][:except]
+      return if skip_resource?(resources,except_options)
+      super(*resources, &block)
+    end
+
+    def resource(*resources, &block)
+      except_options = @scope[:options][:except]
+      return if skip_resource?(resources,except_options)
+      super(*resources, &block)
+    end
+
+    def skip_resource?(resources, except_options)
+      return false if(resources.length > 1 || except_options.blank?)
+      return true if except_options.include?(resources.first.to_s)
+      false
+    end
+
     def inherit_routes(*entities)
       options = entities.extract_options!
       options[:old_namespace] = entities.dup.shift
+
       entities.each { |entity|
         inherited_route_block = @cached_namespace_blocks[entity]
-        self.instance_exec &inherited_route_block
+        scope(options) do
+          inherited_route_block.call()
+        end
       }
       create_derived_controllers(options[:old_namespace], options)
     end
