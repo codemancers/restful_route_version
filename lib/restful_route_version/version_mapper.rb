@@ -2,7 +2,6 @@ module RestfulRouteVersion
   module VersionMapper
     attr_accessor :cached_namespace_blocks
     def version_namespace(path, options = {}, &block)
-      #puts "Calling version_namespace"
       path = path.to_s
       options = { :path => path, :as => path, :module => path,
                   :shallow_path => path, :shallow_prefix => path }.merge!(options)
@@ -30,17 +29,14 @@ module RestfulRouteVersion
     end
 
     def skip_resource?(resources, except_options)
-      #puts "********** incoming #{resources.inspect} and except_options #{except_options.inspect} and path #{@scope[:path]} **********"
       return false if(resources.length > 1 || except_options.blank?)
       return true if except_options.include?(resources.first.to_s)
       false
     end
 
     def inherit_routes(*entities)
-      #puts "Current path #{@scope[:path]} and old one #{entities.first}"
       options = entities.extract_options!
       new_options = merge_except_options(options)
-      #puts "New options are #{new_options.inspect}"
       new_options[:old_namespace] = @scope[:options][:old_namespace] || entities.dup.shift
 
 
@@ -72,12 +68,9 @@ module RestfulRouteVersion
       exclude_constants = options[:except].blank? ? [] : options[:except]
 
       controllers_to_exclude = exclude_constants.map { |x| (old_namespace + "/#{x}Controller").camelize }
-      #puts "Old namespace is #{old_namespace}"
       old_namespace.camelize.constantize.constants.each do |constant_name|
-        #puts "Incoming constant #{constant_name}"
         full_constant_name = old_namespace.camelize + "::" + constant_name.to_s
         new_controller_name = "#{current_namespace.camelize}::#{constant_name}"
-        #puts "Defining constant #{new_controller_name} with parent #{full_constant_name}"
         if create_controller_dynamically?(controllers_to_exclude, full_constant_name, new_controller_name)
           create_controller_class(new_controller_name,Class.new(full_constant_name.constantize))
         end
@@ -92,7 +85,6 @@ module RestfulRouteVersion
 
 
     def create_controller_class(full_constant_name, klass_constant)
-      #puts "Full constant_name is #{full_constant_name}"
       names = full_constant_name.split('::')
       ActiveSupport::Dependencies.dynamically_defined_constants << full_constant_name
       names.shift if names.empty? || names.first.empty?
