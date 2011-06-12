@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake'
+
 desc "Run tests"
 task :test do
   test_files = Dir["test/*_test.rb"]
