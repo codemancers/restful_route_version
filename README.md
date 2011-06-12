@@ -50,3 +50,4 @@ class Api::V10::BaseController < ActionController::Base
 end
 ```
 
+4. Works with Ruby 1.9.2 and Ruby 1.8.7
