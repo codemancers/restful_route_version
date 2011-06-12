@@ -74,7 +74,7 @@ module RestfulRouteVersion
       controllers_to_exclude = exclude_constants.map { |x| (old_namespace + "/#{x}Controller").camelize }
       #puts "Old namespace is #{old_namespace}"
       old_namespace.camelize.constantize.constants.each do |constant_name|
-        puts "Incoming constant #{constant_name}"
+        #puts "Incoming constant #{constant_name}"
         full_constant_name = old_namespace.camelize + "::" + constant_name.to_s
         new_controller_name = "#{current_namespace.camelize}::#{constant_name}"
         #puts "Defining constant #{new_controller_name} with parent #{full_constant_name}"

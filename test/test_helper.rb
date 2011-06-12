@@ -32,6 +32,10 @@ $:<< File.join(File.dirname(__FILE__), "..", "lib")
 $:<< File.join(File.dirname(__FILE__), "rails_sandbox", "app", "controllers")
 
 require "restful_route_version"
+ActionDispatch::Routing::Mapper.send(:include, RestfulRouteVersion::VersionMapper)
+ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::DependencyExt)
+ActiveSupport::Dependencies.extend(RestfulRouteVersion::DependencyExt)
+ActionController::Base.extend(RestfulRouteVersion::ControllerExt)
 
 module Rails
   def self.root
@@ -41,13 +45,16 @@ module Rails
   def self.backtrace_cleaner
     @@backtrace_cleaner ||= MockBacktraceCleaner.new()
   end
+  def self.env
+    @_env ||= ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"] || ENV["RACK_ENV"] || "test")
+  end
+
+  def self.env_defaults
+    {}
+  end
+
+  def self.application
+    self
+  end
 end
 
-puts "Loading file... #{Rails.root}"
-
-
-
-ActionDispatch::Routing::Mapper.send(:include, RestfulRouteVersion::VersionMapper)
-ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::DependencyExt)
-ActiveSupport::Dependencies.extend(RestfulRouteVersion::DependencyExt)
-ActionController::Base.extend(RestfulRouteVersion::ControllerExt)
