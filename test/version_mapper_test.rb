@@ -59,7 +59,7 @@ class VersionMapperTest < Test::Unit::TestCase
             inherit_routes("/api/v11",:except => %w(notes))
             resources :lessons
           end
-          end #end of map.version_namespace(:api)
+        end #end of map.version_namespace(:api)
       end #end of route_block
 
     end #end of setup block
