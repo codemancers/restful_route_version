@@ -1,5 +1,5 @@
 require_relative "test_helper"
-require File.join(File.dirname(__FILE__), "rails_sandbox/app/controllers/api/v10/songs_controller")
+require_relative "rails_sandbox/app/controllers/api/v10/songs_controller"
 
 module Api
   module V10; end
@@ -8,9 +8,12 @@ end
 
 class Api::V10::SongsControllerTest < ActionController::TestCase
   tests Api::V10::SongsController
+
   context "For finding template path of controllers which implement their own views" do
     setup do
-      ActionController::Routing::Routes.draw do
+      @route_set = ActionDispatch::Routing::RouteSet.new()
+
+      @route_set.draw do
         version_namespace :api do
           version_namespace(:v10, :cache_route => true) do
             resources :articles
@@ -29,7 +32,6 @@ class Api::V10::SongsControllerTest < ActionController::TestCase
             inherit_routes("/api/v11")
             resources :lessons
           end
-          map.connect ':controller/:action/:id'
         end #end of map.version_namespace(:api)
       end
 
@@ -53,7 +55,8 @@ end
 class Api::V11::SongsControllerTest < ActionController::TestCase
   context "For finding template path of derived controllers" do
     setup do
-      ActionController::Routing::Routes.draw do
+      @route_set = ActionDispatch::Routing::RouteSet.new()
+      @route_set.draw do
         version_namespace :api do
           version_namespace(:v10, :cache_route => true) do
             resources :articles
