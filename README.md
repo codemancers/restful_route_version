@@ -5,7 +5,7 @@
 Features
 ----------
 
-1. It extends routing API of rails by leting us inherit routes between versions:
+* It extends routing API of rails by leting us inherit routes between versions:
 
     ```ruby
     version_namespace :api do
@@ -31,12 +31,12 @@ Features
    Important thing to remember is only routes which were cached via `cache_route => true` can be 
    reused for inheritance. Normal namespace blocks aren't cached.
    
-2. Dynamically defines controllers between versions. In other words if v11 inherits 'notes' route
+* Dynamically defines controllers between versions. In other words if v11 inherits 'notes' route
    from v10, and v11 doesn't have its own NotesController defined the, plugin will
    automatically define `Api::V11::NotesController` which will inherit from `Api::V10::NotesController`. 
    
 
-3. Inherits view files (such as index.xml.builder) between versions. For example if `V11::ArticlesController`
+* Inherits view files (such as index.xml.builder) between versions. For example if `V11::ArticlesController`
    inherits `V10::ArticlesController` it will as well inherit all the view files of `v10/articles/`
    and hence there won't be any need to copy the view files around when creating new version of the API.
 
@@ -44,10 +44,11 @@ Features
   Template inheritance will work out of box on Rails 3.1, but if you are still on 3.0.x series,
   you can use it now :
 
-    ```ruby
-    class Api::V10::BaseController < ActionController::Base
-       restful_route_version
-    end
-    ```
+   ```ruby
+   class Api::V10::BaseController < ActionController::Base
+      restful_route_version
+   end
+   ```
 
-4. Works with Ruby 1.9.2 and Ruby 1.8.7
+* Works with Ruby 1.9.2 and Ruby 1.8.7
+
