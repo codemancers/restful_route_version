@@ -2,6 +2,7 @@ module RestfulRouteVersion
   module VersionMapper
     attr_accessor :cached_namespace_blocks
     def version_namespace(path, options = {}, &block)
+      #puts "Calling version_namespace"
       path = path.to_s
       options = { :path => path, :as => path, :module => path,
                   :shallow_path => path, :shallow_prefix => path }.merge!(options)
@@ -71,8 +72,9 @@ module RestfulRouteVersion
       exclude_constants = options[:except].blank? ? [] : options[:except]
 
       controllers_to_exclude = exclude_constants.map { |x| (old_namespace + "/#{x}Controller").camelize }
-
+      #puts "Old namespace is #{old_namespace}"
       old_namespace.camelize.constantize.constants.each do |constant_name|
+        puts "Incoming constant #{constant_name}"
         full_constant_name = old_namespace.camelize + "::" + constant_name.to_s
         new_controller_name = "#{current_namespace.camelize}::#{constant_name}"
         #puts "Defining constant #{new_controller_name} with parent #{full_constant_name}"
@@ -90,6 +92,7 @@ module RestfulRouteVersion
 
 
     def create_controller_class(full_constant_name, klass_constant)
+      #puts "Full constant_name is #{full_constant_name}"
       names = full_constant_name.split('::')
       ActiveSupport::Dependencies.dynamically_defined_constants << full_constant_name
       names.shift if names.empty? || names.first.empty?

@@ -50,4 +50,4 @@ puts "Loading file... #{Rails.root}"
 ActionDispatch::Routing::Mapper.send(:include, RestfulRouteVersion::VersionMapper)
 ActiveSupport::Dependencies.send(:include, RestfulRouteVersion::DependencyExt)
 ActiveSupport::Dependencies.extend(RestfulRouteVersion::DependencyExt)
-
+ActionController::Base.extend(RestfulRouteVersion::ControllerExt)
