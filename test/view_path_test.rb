@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "test_helper")
+require_relative "test_helper"
 require File.join(File.dirname(__FILE__), "rails_sandbox/app/controllers/api/v10/songs_controller")
 
 module Api
@@ -20,13 +20,13 @@ class Api::V10::SongsControllerTest < ActionController::TestCase
           end
 
           version_namespace(:v11, :cache_route => true) do
-            inherit_routes("api/v10", :except => %w(articles questions))
+            inherit_routes("/api/v10", :except => %w(articles questions))
             resources :tags
             resources :articles
           end
 
           api_routes.version_namespace(:v12) do
-            inherit_routes("api/v11")
+            inherit_routes("/api/v11")
             resources :lessons
           end
           map.connect ':controller/:action/:id'
@@ -61,24 +61,30 @@ class Api::V11::SongsControllerTest < ActionController::TestCase
             resources :questions
             resources :songs do 
               collection do
-                :foo => :get, :bar => :get, :baz => :get 
+                get 'foo'
+                get 'bar'
+                get 'baz'
               end
             end
           end
 
-          api_routes.version_namespace(:v11, :cache_route => true) do |v11_routes|
-            v11_routes.inherit_routes("api/v10", :except => %w(articles questions))
-            v11_routes.resources :tags
-            v11_routes.resources :articles, :collection => {:search => :get}
+          version_namespace(:v11, :cache_route => true) do
+            inherit_routes("/api/v10", :except => %w(articles questions))
+            resources :tags
+            resources :articles do
+              collection do 
+                get 'search'
+              end
+            end
           end
 
-          api_routes.version_namespace(:v12) do |v12_routes|
-            v12_routes.inherit_routes("api/v11")
-            v12_routes.resources :lessons
+          version_namespace(:v12) do
+            inherit_routes("/api/v11")
+            resources :lessons
           end
-          map.connect ':controller/:action/:id'
         end #end of map.version_namespace(:api)
       end
+      
       ActionController::Base.prepend_view_path("#{Rails.root}/app/views")
       self.class.tests Api::V11::SongsController
     end #end of setup block
