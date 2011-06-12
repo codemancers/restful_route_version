@@ -5,28 +5,28 @@
 Features
 ----------
 
-1. It extends routing API of rails, letting us inherit routes between versions:
+1. It extends routing API of rails by leting us inherit routes between versions:
 
-```ruby
-version_namespace :api do
-  version_namespace(:v10,:cache_route => true) do
-    resources :articles
-    resources :comments
-    resources :notes
-  end     
-
-  version_namespace(:v11, :cache_route => true) do
-    inherit_routes("/api/v10", :except => %w(articles))
-    resources :articles
-    resources :tags
-  end
-
-  version_namespace(:v12) do
-    inherit_routes("/api/v11",:except => %w(notes))
-    resources :lessons
-  end
-end
-```
+    ```ruby
+    version_namespace :api do
+      version_namespace(:v10,:cache_route => true) do
+        resources :articles
+        resources :comments
+        resources :notes
+      end     
+    
+      version_namespace(:v11, :cache_route => true) do
+        inherit_routes("/api/v10", :except => %w(articles))
+        resources :articles
+        resources :tags
+      end
+    
+      version_namespace(:v12) do
+        inherit_routes("/api/v11",:except => %w(notes))
+        resources :lessons
+      end
+    end
+    ```
 
    Important thing to remember is only routes which were cached via `cache_route => true` can be 
    reused for inheritance. Normal namespace blocks aren't cached.
@@ -44,10 +44,10 @@ end
   Template inheritance will work out of box on Rails 3.1, but if you are still on 3.0.x series,
   you can use it now :
 
-```ruby
-class Api::V10::BaseController < ActionController::Base
-   restful_route_version
-end
-```
+    ```ruby
+    class Api::V10::BaseController < ActionController::Base
+       restful_route_version
+    end
+    ```
 
 4. Works with Ruby 1.9.2 and Ruby 1.8.7
