@@ -4,12 +4,12 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{restful_route_version_patch}
+  s.name = %q{restful_route_version}
   s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Hemant Kumar"]
-  s.date = %q{2011-06-12}
+  s.date = %q{2011-07-15}
   s.description = %q{Versioning your routes in Rails3}
   s.email = %q{gethemant@gmail.com}
   s.extra_rdoc_files = [
@@ -55,7 +55,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/gnufied/restful_route_version}
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{restful_route_version}
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.5.2}
   s.summary = %q{Versioning your routes in Rails3}
   s.test_files = [
     "test/dependency_ext_test.rb",
@@ -82,14 +82,14 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<actionpack>, ["~> 3.0.0"])
       s.add_runtime_dependency(%q<railties>, ["~> 3.0.0"])
     else
-      s.add_dependency(%q<rails>, ["= 3.0.7"])
+      s.add_dependency(%q<rails>, [">= 3.0.7"])
       s.add_dependency(%q<rake>, [">= 0"])
       s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
       s.add_dependency(%q<actionpack>, ["~> 3.0.0"])
       s.add_dependency(%q<railties>, ["~> 3.0.0"])
     end
   else
-    s.add_dependency(%q<rails>, ["= 3.0.7"])
+    s.add_dependency(%q<rails>, [">= 3.0.7"])
     s.add_dependency(%q<rake>, [">= 0"])
     s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
     s.add_dependency(%q<actionpack>, ["~> 3.0.0"])
