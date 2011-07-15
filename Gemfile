@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "3.0.7"
+gem "rails", ">= 3.0.7"
 gem "rake"
 
 group :test do
