@@ -2,4 +2,5 @@ coverage
 vendor
 .bundle
 pkg
+Gemfile.lock
 
