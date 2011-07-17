@@ -19,7 +19,7 @@ begin
     gem.summary     = 'Versioning your routes in Rails3'
     gem.description = 'Versioning your routes in Rails3'
     gem.email       = 'gethemant@gmail.com'
-    
+
     gem.homepage    = 'http://github.com/gnufied/%s' % gem.name
 
     gem.authors     = [ 'Hemant Kumar']

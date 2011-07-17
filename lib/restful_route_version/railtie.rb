@@ -5,7 +5,7 @@ require "restful_route_version/version_mapper"
 require "restful_route_version/inherited_view_resolver"
 
 module RestfulRouteVersion
-  VERSION = '0.0.2'
+  VERSION = '0.0.3'
   class Railtie < Rails::Railtie
 
     initializer "restful_route_version.configure_rails_initialization" do

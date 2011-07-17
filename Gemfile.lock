@@ -76,6 +76,6 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.0.0)
   jeweler (~> 1.5.2)
-  rails (= 3.0.7)
+  rails (~> 3.0.7)
   rake
   shoulda
