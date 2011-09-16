@@ -60,6 +60,8 @@ class VersionMapperTest < Test::Unit::TestCase
             resources :lessons
           end
         end #end of map.version_namespace(:api)
+        resources :articles
+        resource :book
       end #end of route_block
 
     end #end of setup block
@@ -67,8 +69,12 @@ class VersionMapperTest < Test::Unit::TestCase
     should "create derived routes when using inherit_routes" do
       @mapper.instance_exec(&@route_block)
       v12_tag_route = @route_set.named_routes.routes[:edit_api_v12_tag]
+      articles_route = @route_set.named_routes.routes[:articles]
+      book_route = @route_set.named_routes.routes[:book]
       assert !v12_tag_route.blank?
       assert_match /\/api\/v12\/tags\/\:id\/edit/, v12_tag_route.to_s
+      assert_match /\/articles/, articles_route.to_s
+      assert_match /\/book/, book_route.to_s
     end
     
     should "not create routes for except resources" do
