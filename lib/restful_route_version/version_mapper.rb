@@ -17,13 +17,13 @@ module RestfulRouteVersion
     end
 
     def resources(*resources, &block)
-      except_options = @scope[:options][:except]
+      except_options = @scope[:options].blank? ? [] : @scope[:options][:except]
       return if skip_resource?(resources,except_options)
       super(*resources, &block)
     end
 
     def resource(*resources, &block)
-      except_options = @scope[:options][:except]
+      except_options = @scope[:options].blank? ? [] : @scope[:options][:except]
       return if skip_resource?(resources,except_options)
       super(*resources, &block)
     end
